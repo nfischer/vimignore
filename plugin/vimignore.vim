@@ -6,17 +6,25 @@ function! EditGitIgnore()
     endif
 
     " If we've already found the gitignore file, use it!
-    if exists('g:gitignore') && filereadable(g:gitignore)
-        " echo 'already has gitignore'
-        " break
-    else
-        " echo 'finding .gitignore'
+    if !exists('b:gitignore') || !filereadable(b:gitignore)
         " First, figure out if this is a git repo
+        " Get current dir
+        redir @z
+        pwd
+        redir END
+        let cur_dir = @z
+        let cur_dir = cur_dir[1:]
+
+        " Change into the directory of the current file
+        exe 'cd ' . expand('%:p:h')
+
+        " Check for Git
         let git_dir = system('git rev-parse --git-dir 2>/dev/null')
         if git_dir == ''
             echohl ErrorMsg
             echo 'Error: this is not a Git repository'
             echohl NONE
+            exe 'cd ' . cur_dir
             return
         endif
 
@@ -27,19 +35,13 @@ function! EditGitIgnore()
         let root_ignore = root_dir . '/.gitignore'
 
         if filereadable(root_ignore)
-            let g:gitignore = root_ignore
+            let b:gitignore = root_ignore
         else
-            redir @z
-            pwd
-            redir END
-            let cur_dir = @z
-            let cur_dir = cur_dir[1:]
-
             " Begin looking for .gitignore
             while !isdirectory('.git')
                 if filereadable('.gitignore')
                     " If we found a gitignore file here, let's choose it
-                    let g:gitignore = fnamemodify('.gitignore', ':p')
+                    let b:gitignore = fnamemodify('.gitignore', ':p')
                     exe 'cd ' . cur_dir
                     break
                 else
@@ -49,16 +51,15 @@ function! EditGitIgnore()
             endwhile
         endif
 
-        if !exists('g:gitignore')
-            let g:gitignore = root_ignore
+        if !exists('b:gitignore')
+            let b:gitignore = root_ignore
         endif
-        " echo 'end'
     endif
     " edit ign_file
     if expand('%') == ''
-        exe 'edit ' . g:gitignore
+        exe 'edit ' . b:gitignore
     else
-        exe make_split . ' ' . g:gitignore
+        exe make_split . ' ' . b:gitignore
     endif
 endfunction
 
