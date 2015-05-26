@@ -20,7 +20,7 @@ function! SetGitIgnore()
         echo 'Error: this is not a Git repository'
         echohl NONE
         exe 'cd ' . cur_dir
-        return
+        return 1
     endif
 
     " Strip trailing newline
@@ -50,6 +50,8 @@ function! SetGitIgnore()
         let b:gitignore = root_ignore
     endif
 
+    return 0
+
 endfunction
 
 function! EditGitIgnore()
@@ -61,7 +63,10 @@ function! EditGitIgnore()
 
     " If we've already found the gitignore file, use it!
     if !exists('b:gitignore') || !filereadable(b:gitignore)
-        call SetGitIgnore()
+        ret = call SetGitIgnore()
+        if ret != 0
+            return
+        endif
     endif
     " edit b:gitignore
     if expand('%') == ''
