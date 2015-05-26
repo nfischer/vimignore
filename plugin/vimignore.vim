@@ -68,5 +68,5 @@ endfunction
 
 augroup vimignore
     autocmd!
-    autocmd BufNewFile,BufReadPost * call SetCommands()
+    autocmd BufWinEnter,BufReadPost * call SetCommands()
 augroup END
