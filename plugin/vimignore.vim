@@ -1,12 +1,18 @@
 " vimignore.vim
 " For editing .gitignore files very easily
 " Maintainter:  Nate Fischer
+
+function! PwdFunc()
+    pwd
+endfunction
+
 function! SetGitIgnore()
     " First, figure out if this is a git repo
-    " Get current dir
+
+    " Set current dir (call function to silence output
     redir @z
-    pwd
-    redir END
+    silent call PwdFunc()
+    silent redir END
     let cur_dir = @z
     let cur_dir = cur_dir[1:]
 
@@ -63,9 +69,9 @@ function! EditGitIgnore()
 
     " If we've already found the gitignore file, use it!
     if !exists('b:gitignore') || !filereadable(b:gitignore)
-        ret = call SetGitIgnore()
+        let ret = SetGitIgnore()
         if ret != 0
-            return
+            return 1
         endif
     endif
     " edit b:gitignore
@@ -74,6 +80,8 @@ function! EditGitIgnore()
     else
         exe make_split . ' ' . b:gitignore
     endif
+
+    return 0
 endfunction
 
 function! SetCommands()
