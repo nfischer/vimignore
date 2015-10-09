@@ -2,11 +2,7 @@
 " For editing .gitignore files very easily
 " Maintainter:  Nate Fischer
 
-function! PwdFunc()
-  pwd
-endfunction
-
-function! SetGitIgnore()
+function! s:SetGitIgnore()
   " First, figure out if this is a git repo
 
   " Set current dir (call function to silence output
@@ -57,7 +53,7 @@ function! SetGitIgnore()
 
 endfunction
 
-function! EditGitIgnore()
+function! s:EditGitIgnore()
   " set split preference
   let l:make_split = 'split'
   if exists('g:gsplit_pref') && g:gsplit_pref == 1
@@ -66,7 +62,7 @@ function! EditGitIgnore()
 
   " If we've already found the gitignore file, use it!
   if !exists('b:gitignore') || !filereadable(b:gitignore)
-    let l:ret = SetGitIgnore()
+    let l:ret = s:SetGitIgnore()
     if l:ret != 0
       return 1
     endif
@@ -93,7 +89,7 @@ function! s:IgnoreFile(...)
   let l:orig_winnr = winnr()
   let l:win_pos = winsaveview()
 
-  silent call EditGitIgnore()
+  silent call s:EditGitIgnore()
   let l:old_cursor = getpos('.')
   normal! G
   put=a:1
@@ -110,18 +106,24 @@ function! s:IgnoreFile(...)
   endif
 endfunction
 
-function! SetCommands()
-  command! -buffer GEditIgnore call EditGitIgnore()
-  command! -buffer -nargs=0 GIgnoreCurrentFile call s:IgnoreFile(expand('%'))
-  command! -buffer -nargs=1 GAddToIgnore call s:IgnoreFile(<f-args>)
+function! s:GIgnoreFileOnLine()
+  let l:line_text = getline('.')
+  let l:fname = matchstr(l:line_text, '\S\+$')
+  call s:IgnoreFile(l:fname)
+endfunction
+
+function! s:SetCommands()
+  command! -buffer -nargs=0 GEditIgnore call <SID>EditGitIgnore()
+  command! -buffer -nargs=0 GIgnoreCurrentFile call <SID>IgnoreFile(expand('%'))
+  command! -buffer -nargs=1 GAddToIgnore call <SID>IgnoreFile(<f-args>)
 endfunction
 
 function! SetCommitMappings()
-  nnoremap <buffer> <silent> I 0WW:GAddToIgnore <C-r><C-f><CR>
+  nnoremap <buffer> <silent> I :call <SID>GIgnoreFileOnLine()<CR>
 endfunction
 
 augroup vimignore
   autocmd!
-  autocmd BufWinEnter,BufReadPost * call SetCommands()
+  autocmd BufWinEnter,BufReadPost * call s:SetCommands()
   autocmd FileType gitcommit call SetCommitMappings()
 augroup END
