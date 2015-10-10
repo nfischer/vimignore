@@ -53,7 +53,7 @@ command! -nargs=1 -complete=file GAddToIgnore call vimignore#IgnoreFile(<f-args>
 " Set mappings for when we're in a gitcommit file
 " This is for fugitive integration with :Gstatus
 function! s:SetCommitMappings()
-  nnoremap <buffer> <silent> I :call GIgnoreFileOnLine()<CR>
+  nnoremap <buffer> <silent> I :call <SID>GIgnoreFileOnLine()<CR>
 endfunction
 
 ""

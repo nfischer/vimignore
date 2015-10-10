@@ -1,20 +1,43 @@
-Vim-Gitignore
-=============
+Vimignore
+=========
 
-A simple plugin to allow you to efficiently manage your .gitignore files in
+A simple plugin to allow you to efficiently manage your `.gitignore` files in
 your project.
+
+Introduction
+------------
+
+I came up with the idea for this plugin when I was working on various projects
+with partners and would need to reconfigure the gitignore file for the
+project. I had to do this often enough that I felt that it should flow more
+natively in vim.
+
+I decided to make this plugin to facilitate the process. Vimignore offers a
+few different commands for making sure the appropriate files are ignored.
 
 Usage
 -----
 
-Simply call `:Gignore` to open up your .gitignore file.
+See `:help vimignore` from within vim for up-to-date documentation.
+
+Simply call `:GEditIgnore` to open up your .gitignore file.
 
 If no file exists, this will open a new .gitignore file in the root of the
 git repo.
 
-If you have multiple .gitignore files, this plugin will prefer the one in
+If you have multiple .gitignore files, this plugin will prefer the one at
 the root. If that does not exist, it will then prefer the deepest .gitignore
 file along your path.
+
+Fugitive Integration
+--------------------
+
+The best way to use this plugin is in conjunction with [Tim Pope's fugitive
+plugin](www.github.com/tpope/vim-fugitive). In particular, when using the
+`:Gstatus` command, Vimignore adds a mapping on 'I'.
+
+Press `<shift>-i` when viewing the git index (`:Gstatus` window) to add the file on
+the current line to the gitignore list and update the git index accordingly.
 
 Configuration
 -------------
