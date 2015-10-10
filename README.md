@@ -37,8 +37,8 @@ Fugitive Integration
 --------------------
 
 The best way to use this plugin is in conjunction with [Tim Pope's fugitive
-plugin](https://github.com/tpope/vim-fugitive). In particular, when using the
-`:Gstatus` command, Vimignore adds a mapping on `I`.
+plugin](https://github.com/tpope/vim-fugitive). In particular, when using
+fugitive's `:Gstatus` command, Vimignore adds a mapping on `I`.
 
 Press `<shift>-i` when viewing the git index (`:Gstatus` window) to add the file
 on the current line to the gitignore list and update the git index accordingly.

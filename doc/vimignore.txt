@@ -43,8 +43,9 @@ COMMANDS                                                  *vimignore-commands*
   |:GEditIgnore| command, so be aware of side effects due to compatibility
   issues with the 'hidden' option.
 
-:GAddToIgnore {filename}                                       *:GAddToIgnore*
-  Add {filename} to the .gitignore list.
+:GAddToIgnore {fname1} [fnames...]                             *:GAddToIgnore*
+  Add each file fname1, fname2, etc. to the .gitignore list. This takes one or
+  more arguments
 
 
 vim:tw=78:ts=8:ft=help:norl:

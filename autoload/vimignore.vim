@@ -1,5 +1,5 @@
 ""
-" This is my function. There are many like it, but this one is mine
+" Figure out the gitignore file and set the global variable
 function! s:SetGitIgnore()
   " First, figure out if this is a git repo
 
@@ -51,8 +51,25 @@ function! s:SetGitIgnore()
 
 endfunction
 
+function! s:RefreshGitFiles()
+  if &filetype == 'gitcommit'
+    " silent! edit
+    edit
+  endif
+endfunction
+
+function! vimignore#ReloadGitIndex()
+  let l:orig_buf = bufnr('%')
+  bufdo call s:RefreshGitFiles()
+  exe 'buffer ' . l:orig_buf
+  " Restore syntax hilighting
+  if !empty(&syntax)
+    syntax on
+  endif
+endfunction
+
 ""
-" This is my function. There are many like it, but this one is mine
+" Open the gitignore file for edit
 function! vimignore#EditGitIgnore()
   " set split preference
   let l:make_split = 'split'
@@ -86,15 +103,17 @@ function! vimignore#EditGitIgnore()
 endfunction
 
 ""
-" This is my function. There are many like it, but this one is mine
-function! vimignore#IgnoreFile(...)
-  let l:orig_winnr = winnr()
+" Add several files to the ignore list
+function! vimignore#IgnoreFiles(...)
   let l:win_pos = winsaveview()
+  let l:orig_winnr = winnr()
 
   silent call vimignore#EditGitIgnore()
   let l:old_cursor = getpos('.')
   normal! G
-  put=a:1
+  for l:fname in a:000
+    put=l:fname
+  endfor
   call setpos('.', l:old_cursor)
   silent write | quit
 
@@ -102,8 +121,15 @@ function! vimignore#IgnoreFile(...)
   exe l:orig_winnr . 'wincmd w'
   call winrestview(l:win_pos)
 
-  " Refresh the git status
-  if &filetype == 'gitcommit'
-    edit!
-  endif
+  " " Refresh the git status buffer
+  " let l:orig_buf = bufnr('%')
+  " bufdo call s:RefreshGitFiles()
+  " exe 'buffer ' . l:orig_buf
+
+  " " If the user uses syntax hilighting, we'll need to reenable it in case it was
+  " " turned off by ':edit'
+  " if !empty(&syntax)
+  "   syntax on
+  " endif
+  call vimignore#ReloadGitIndex()
 endfunction
