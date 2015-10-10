@@ -53,8 +53,7 @@ endfunction
 
 function! s:RefreshGitFiles()
   if &filetype == 'gitcommit'
-    " silent! edit
-    edit
+    silent! edit
   endif
 endfunction
 
