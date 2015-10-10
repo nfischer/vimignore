@@ -1,0 +1,6 @@
+{
+  "name": "vimignore",
+  "description": "Gitignore file management",
+  "author": "Nate Fischer",
+  "repository": {"type": "git", "url": "git://github.com/nfischer/vim-vimignore"}
+}

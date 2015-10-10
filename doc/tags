@@ -1,0 +1,10 @@
+:GAddToIgnore	vimignore.txt	/*:GAddToIgnore*
+:GEditIgnore	vimignore.txt	/*:GEditIgnore*
+:GIgnoreCurrentFile	vimignore.txt	/*:GIgnoreCurrentFile*
+Vimignore	vimignore.txt	/*Vimignore*
+vimignore	vimignore.txt	/*vimignore*
+vimignore-commands	vimignore.txt	/*vimignore-commands*
+vimignore-contents	vimignore.txt	/*vimignore-contents*
+vimignore-fugitive-integration	vimignore.txt	/*vimignore-fugitive-integration*
+vimignore-intro	vimignore.txt	/*vimignore-intro*
+vimignore.txt	vimignore.txt	/*vimignore.txt*

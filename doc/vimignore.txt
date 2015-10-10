@@ -1,0 +1,50 @@
+*vimignore.txt*	Gitignore file management
+Nate Fischer                                           *Vimignore* *vimignore*
+
+==============================================================================
+CONTENTS                                                  *vimignore-contents*
+  1. Introduction............................................|vimignore-intro|
+  2. Fugitive Integration.....................|vimignore-fugitive-integration|
+  3. Commands.............................................|vimignore-commands|
+
+==============================================================================
+INTRODUCTION                                                 *vimignore-intro*
+
+
+I came up with the idea for this plugin when I was working on various projects
+with partners and would need to reconfigure the gitignore file for the
+project. I had to do this often enough that I felt that it should flow more
+natively in vim.
+
+I decided to make this plugin to facilitate the process. Vimignore offers a
+few different commands for making sure the appropriate files are ignored.
+
+==============================================================================
+FUGITIVE INTEGRATION                          *vimignore-fugitive-integration*
+
+
+The best way to use this plugin is in conjunction with Tim Pope's fugitive
+plugin (www.github.com/tpope/vim-fugitive). In particular, when using the
+|:Gstatus| command, Vimignore adds a mapping on I.
+
+Press 'I' when viewing the git index (|:Gstatus| window) to add the file on
+the current line to the gitignore list and update the git index accordingly.
+
+==============================================================================
+COMMANDS                                                  *vimignore-commands*
+
+:GEditIgnore                                                    *:GEditIgnore*
+  Find and open the appropriate .gitignore file for editing.
+
+  Note: unless this file is already open, this will set 'bufhidden' to delete.
+
+:GIgnoreCurrentFile                                      *:GIgnoreCurrentFile*
+  Append the current file to the .gitignore list. This internally uses the
+  |:GEditIgnore| command, so be aware of side effects due to compatibility
+  issues with the 'hidden' option.
+
+:GAddToIgnore {filename}                                       *:GAddToIgnore*
+  Add {filename} to the .gitignore list.
+
+
+vim:tw=78:ts=8:ft=help:norl:

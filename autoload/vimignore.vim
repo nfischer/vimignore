@@ -1,7 +1,5 @@
-" vimignore.vim
-" For editing .gitignore files very easily
-" Maintainter:  Nate Fischer
-
+""
+" This is my function. There are many like it, but this one is mine
 function! s:SetGitIgnore()
   " First, figure out if this is a git repo
 
@@ -53,7 +51,9 @@ function! s:SetGitIgnore()
 
 endfunction
 
-function! s:EditGitIgnore()
+""
+" This is my function. There are many like it, but this one is mine
+function! vimignore#EditGitIgnore()
   " set split preference
   let l:make_split = 'split'
   if exists('g:gsplit_pref') && g:gsplit_pref == 1
@@ -85,11 +85,13 @@ function! s:EditGitIgnore()
   return 0
 endfunction
 
-function! s:IgnoreFile(...)
+""
+" This is my function. There are many like it, but this one is mine
+function! vimignore#IgnoreFile(...)
   let l:orig_winnr = winnr()
   let l:win_pos = winsaveview()
 
-  silent call s:EditGitIgnore()
+  silent call vimignore#EditGitIgnore()
   let l:old_cursor = getpos('.')
   normal! G
   put=a:1
@@ -105,25 +107,3 @@ function! s:IgnoreFile(...)
     edit!
   endif
 endfunction
-
-function! s:GIgnoreFileOnLine()
-  let l:line_text = getline('.')
-  let l:fname = matchstr(l:line_text, '\S\+$')
-  call s:IgnoreFile(l:fname)
-endfunction
-
-function! s:SetCommands()
-  command! -buffer -nargs=0 GEditIgnore call <SID>EditGitIgnore()
-  command! -buffer -nargs=0 GIgnoreCurrentFile call <SID>IgnoreFile(expand('%'))
-  command! -buffer -nargs=1 GAddToIgnore call <SID>IgnoreFile(<f-args>)
-endfunction
-
-function! SetCommitMappings()
-  nnoremap <buffer> <silent> I :call <SID>GIgnoreFileOnLine()<CR>
-endfunction
-
-augroup vimignore
-  autocmd!
-  autocmd BufWinEnter,BufReadPost * call s:SetCommands()
-  autocmd FileType gitcommit call SetCommitMappings()
-augroup END
