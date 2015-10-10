@@ -1,3 +1,17 @@
+function! s:FindGitDir()
+  if exists('b:git_dir')
+    return b:git_dir
+  else
+    let l:git_dir = system('git rev-parse --git-dir 2>/dev/null')
+    if empty(l:git_dir)
+      throw 'vimignore'
+    endif
+    " Strip trailing newline
+    let l:git_dir = l:git_dir[:-2]
+    return fnamemodify(l:git_dir, ':p:h')
+  endif
+endfunction
+
 ""
 " Figure out the gitignore file and set the global variable
 function! s:SetGitIgnore()
@@ -5,25 +19,23 @@ function! s:SetGitIgnore()
 
   " Set current dir (call function to silence output
   let l:cur_dir = system('pwd')
-  let l:cur_dir = l:cur_dir[1:]
+  let l:old_autochdir = &l:autochdir
 
   " Change into the directory of the current file
-  exe 'cd ' . expand('%:p:h')
+  setlocal autochdir
 
   " Check for Git
-  let l:git_dir = system('git rev-parse --git-dir 2>/dev/null')
-  if empty(l:git_dir)
-    echohl ErrorMsg
-    echo 'Error: this is not a Git repository'
-    echohl NONE
+  try
+    let l:git_dir = s:FindGitDir()
+  catch /vimignore/
     exe 'cd ' . l:cur_dir
-    return 1
-  endif
+    echohl ErrorMsg
+    echo 'This is not a Git repository'
+    echohl NONE
+    throw 'vimignore'
+  endtry
 
-  " Strip trailing newline
-  let l:git_dir = l:git_dir[:-2]
-
-  let l:root_dir = fnamemodify(l:git_dir, ':p:h:h')
+  let l:root_dir = fnamemodify(l:git_dir, ':h')
   let l:root_ignore = l:root_dir . '/.gitignore'
 
   if filereadable(l:root_ignore)
@@ -47,8 +59,9 @@ function! s:SetGitIgnore()
     let b:gitignore = l:root_ignore
   endif
 
+  let &l:autochdir = l:old_autochdir
+  exe 'cd ' . l:cur_dir
   return 0
-
 endfunction
 
 function! s:RefreshGitFiles()
@@ -68,34 +81,42 @@ function! vimignore#ReloadGitIndex()
 endfunction
 
 ""
+" @private
+" This opens a file based on my preference:
+"   * If I don't have a file open currently, open this with |:edit|
+"   * If I'm already editing something useful, open this in a split
+function! s:OpenIgnoreFile(fname)
+  if empty(expand('%'))
+    exe 'edit ' . a:fname
+  else
+    if exists('g:gsplit_pref') && g:gsplit_pref == 1
+      let l:make_split = 'vsp'
+    else
+      let l:make_split = 'split'
+    endif
+    exe l:make_split . ' ' . a:fname
+  endif
+endfunction
+
+""
 " Open the gitignore file for edit
 function! vimignore#EditGitIgnore(bang)
-  if exists('g:gsplit_pref') && g:gsplit_pref == 1
-    let l:make_split = 'vsp'
-  else
-    let l:make_split = 'split'
-  endif
-
   " If we've already found the gitignore file, use it!
   if !exists('b:gitignore') || !filereadable(b:gitignore)
-    let l:ret = s:SetGitIgnore()
-    if l:ret != 0
+    try
+      let l:ret = s:SetGitIgnore()
+    catch /vimignore/
       return 1
-    endif
+    endtry
   endif
 
   if bufloaded(b:gitignore)
-    let l:already_exists = 1
-  endif
-
-  if empty(expand('%'))
-    exe 'edit ' . b:gitignore
+    call s:OpenIgnoreFile(b:gitignore)
   else
-    exe l:make_split . ' ' . b:gitignore
-  endif
-
-  if !exists('l:already_exists') && (exists('a:bang') && empty(a:bang))
-    set bufhidden=delete
+    call s:OpenIgnoreFile(b:gitignore)
+    if (exists('a:bang') && empty(a:bang))
+      set bufhidden=delete
+    endif
   endif
   return 0
 endfunction
