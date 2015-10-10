@@ -34,8 +34,11 @@ endfunction
 ""
 " Find and open the appropriate .gitignore file for editing.
 "
-" Note: unless this file is already open, this will set 'bufhidden' to delete.
-command! -nargs=0 GEditIgnore call vimignore#EditGitIgnore()
+" This also sets 'bufhidden' for this buffer as follows:
+"  * If this file is already open, 'bufhidden' is not touched
+"  * If the '!' is supplied, this will leave 'bufhidden' untouched
+"  * Otherwise, 'bufhidden' will be set to delete
+command! -nargs=0 -bang GEditIgnore call vimignore#EditGitIgnore('<bang>')
 
 ""
 " Append the current file to the .gitignore list. This internally uses the

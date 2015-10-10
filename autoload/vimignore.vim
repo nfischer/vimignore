@@ -70,11 +70,11 @@ endfunction
 
 ""
 " Open the gitignore file for edit
-function! vimignore#EditGitIgnore()
-  " set split preference
-  let l:make_split = 'split'
+function! vimignore#EditGitIgnore(bang)
   if exists('g:gsplit_pref') && g:gsplit_pref == 1
     let l:make_split = 'vsp'
+  else
+    let l:make_split = 'split'
   endif
 
   " If we've already found the gitignore file, use it!
@@ -95,10 +95,9 @@ function! vimignore#EditGitIgnore()
     exe l:make_split . ' ' . b:gitignore
   endif
 
-  if !exists('l:already_exists')
+  if !exists('l:already_exists') && (exists('a:bang') && empty(a:bang))
     set bufhidden=delete
   endif
-
   return 0
 endfunction
 
@@ -121,15 +120,5 @@ function! vimignore#IgnoreFiles(...)
   exe l:orig_winnr . 'wincmd w'
   call winrestview(l:win_pos)
 
-  " " Refresh the git status buffer
-  " let l:orig_buf = bufnr('%')
-  " bufdo call s:RefreshGitFiles()
-  " exe 'buffer ' . l:orig_buf
-
-  " " If the user uses syntax hilighting, we'll need to reenable it in case it was
-  " " turned off by ':edit'
-  " if !empty(&syntax)
-  "   syntax on
-  " endif
   call vimignore#ReloadGitIndex()
 endfunction
