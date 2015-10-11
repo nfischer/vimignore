@@ -122,23 +122,55 @@ function! vimignore#EditGitIgnore(bang)
 endfunction
 
 ""
-" Add several files to the ignore list
-function! vimignore#IgnoreFiles(...)
+" Add several files to the ignore list. If the <bang> is supplied, allow
+" duplicates to be added, otherwise don't permit duplicates.
+function! vimignore#IgnoreFiles(bang, ...)
   let l:win_pos = winsaveview()
   let l:orig_winnr = winnr()
 
-  silent call vimignore#EditGitIgnore()
+  silent call vimignore#EditGitIgnore('')
   let l:old_cursor = getpos('.')
   normal! G
-  for l:fname in a:000
-    put=l:fname
-  endfor
+  let l:num_duplicates = 0
+  if empty(a:bang)
+    for l:fname in a:000
+      if empty(system('git check-ignore ' . l:fname))
+        put=l:fname
+      else
+        let l:num_duplicates += 1
+      endif
+    endfor
+  else
+    " Don't check for duplicates
+    for l:fname in a:000
+      put=l:fname
+    endfor
+  endif
+
   call setpos('.', l:old_cursor)
-  silent write | quit
+  silent write
+  if winnr('$') > 1
+    hide
+  endif
 
   " Jump back to original file
   exe l:orig_winnr . 'wincmd w'
   call winrestview(l:win_pos)
 
   call vimignore#ReloadGitIndex()
+
+  " If we detected any duplicates, let's provide a warning
+  if l:num_duplicates > 0
+    echohl WarningMsg
+    echon 'Warning: '
+    if l:num_duplicates == a:0 && l:num_duplicates == 1
+      echon 'Your file was'
+    elseif l:num_duplicates == a:0
+      echon 'Your files were'
+    else
+      echon l:num_duplicates . '/' . a:0 . ' files were'
+    endif
+    echon ' already being ignored'
+    echohl NONE
+  endif
 endfunction

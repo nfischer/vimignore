@@ -28,7 +28,7 @@
 function! s:GIgnoreFileOnLine()
   let l:line_text = getline('.')
   let l:fname = matchstr(l:line_text, '\S\+$')
-  call vimignore#IgnoreFiles([l:fname])
+  call vimignore#IgnoreFiles('', l:fname)
 endfunction
 
 ""
@@ -44,14 +44,21 @@ command! -nargs=0 -bang GEditIgnore call vimignore#EditGitIgnore('<bang>')
 " Append the current file to the .gitignore list. This internally uses the
 " |:GEditIgnore| command, so be aware of side effects due to compatibility
 " issues with the 'hidden' option.
-command! -nargs=0 GIgnoreCurrentFile call vimignore#IgnoreFiles([expand('%')])
+"
+" By default, this will check the gitignore list to avoid adding duplicate
+" entries. If the '!' is provided, this will not check for duplicates.
+command! -nargs=0 -bang GIgnoreCurrentFile
+    \ call vimignore#IgnoreFiles('<bang>', expand('%'))
 
 ""
 " @usage {fname1} [fnames...]
 " Add each file fname1, fname2, etc. to the .gitignore list. This takes one or
 " more arguments
-command! -nargs=+ -complete=file GAddToIgnore call
-    \ vimignore#IgnoreFiles(<f-args>)
+"
+" By default, this will check the gitignore list to avoid adding duplicate
+" entries. If the '!' is provided, this will not check for duplicates.
+command! -nargs=+ -complete=file -bang GAddToIgnore call
+    \ vimignore#IgnoreFiles('<bang>', <f-args>)
 
 ""
 " @private

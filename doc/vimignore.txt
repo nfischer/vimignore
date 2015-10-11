@@ -41,14 +41,20 @@ COMMANDS                                                  *vimignore-commands*
     * If the '!' is supplied, this will leave 'bufhidden' untouched
     * Otherwise, 'bufhidden' will be set to delete
 
-:GIgnoreCurrentFile                                      *:GIgnoreCurrentFile*
+:GIgnoreCurrentFile[!]                                   *:GIgnoreCurrentFile*
   Append the current file to the .gitignore list. This internally uses the
   |:GEditIgnore| command, so be aware of side effects due to compatibility
   issues with the 'hidden' option.
 
-:GAddToIgnore {fname1} [fnames...]                             *:GAddToIgnore*
+  By default, this will check the gitignore list to avoid adding duplicate
+  entries. If the '!' is provided, this will not check for duplicates.
+
+:GAddToIgnore[!] {fname1} [fnames...]                          *:GAddToIgnore*
   Add each file fname1, fname2, etc. to the .gitignore list. This takes one or
   more arguments
+
+  By default, this will check the gitignore list to avoid adding duplicate
+  entries. If the '!' is provided, this will not check for duplicates.
 
 
 vim:tw=78:ts=8:ft=help:norl:
