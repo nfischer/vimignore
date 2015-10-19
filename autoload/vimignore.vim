@@ -83,7 +83,7 @@ endfunction
 " Reloads all git-status buffers to reflect new changes to the git index
 function! vimignore#ReloadGitIndex()
   let l:orig_buf = bufnr('%')
-  bufdo call s:RefreshGitFiles()
+  silent bufdo call s:RefreshGitFiles()
   exe 'buffer ' . l:orig_buf
   " Restore syntax hilighting
   if !empty(&syntax)
@@ -140,6 +140,7 @@ endfunction
 function! vimignore#IgnoreFiles(bang, silent, ...)
   let l:win_pos = winsaveview()
   let l:orig_winnr = winnr()
+  let l:orig_bufname = expand('%')
 
   silent call vimignore#EditGitIgnore('')
   let l:old_cursor = getpos('.')
@@ -162,13 +163,15 @@ function! vimignore#IgnoreFiles(bang, silent, ...)
 
   call setpos('.', l:old_cursor)
   silent write
-  if winnr('$') > 1
-    hide
-  endif
 
-  " Jump back to original file
-  exe l:orig_winnr . 'wincmd w'
-  call winrestview(l:win_pos)
+  " Jump back to original buffer
+  if empty(l:orig_bufname)
+    enew
+  else
+    hide
+    exe l:orig_winnr . 'wincmd w'
+    call winrestview(l:win_pos)
+  endif
 
   call vimignore#ReloadGitIndex()
 
