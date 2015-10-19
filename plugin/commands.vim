@@ -30,7 +30,7 @@ function! s:GIgnoreFileOnLine()
   let l:match = matchlist(l:line_text, '^#\t\S\+:\s\+\(\S\+\)$')
   try
     let l:fname = l:match[1]
-    call vimignore#IgnoreFiles('', l:fname)
+    call vimignore#IgnoreFiles('', '', l:fname)
   catch /E684/
     echohl ErrorMsg | echo 'Could not detect filename' | echohl NONE
   endtry
@@ -53,7 +53,7 @@ command! -nargs=0 -bang GEditIgnore call vimignore#EditGitIgnore('<bang>')
 " By default, this will check the gitignore list to avoid adding duplicate
 " entries. If the '!' is provided, this will not check for duplicates.
 command! -nargs=0 -bang GIgnoreCurrentFile
-    \ call vimignore#IgnoreFiles('<bang>', expand('%'))
+    \ call vimignore#IgnoreFiles('<bang>', '' expand('%'))
 
 ""
 " @usage {fname1} [fnames...]
@@ -63,7 +63,7 @@ command! -nargs=0 -bang GIgnoreCurrentFile
 " By default, this will check the gitignore list to avoid adding duplicate
 " entries. If the '!' is provided, this will not check for duplicates.
 command! -nargs=+ -complete=file -bang GAddToIgnore call
-    \ vimignore#IgnoreFiles('<bang>', <f-args>)
+    \ vimignore#IgnoreFiles('<bang>', '', <f-args>)
 
 ""
 " @private

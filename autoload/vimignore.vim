@@ -135,8 +135,9 @@ endfunction
 
 ""
 " Add several files to the ignore list. If the <bang> is supplied, allow
-" duplicates to be added, otherwise don't permit duplicates.
-function! vimignore#IgnoreFiles(bang, ...)
+" duplicates to be added, otherwise don't permit duplicates. If a:silent is
+" nonempty, then don't provide any warning output.
+function! vimignore#IgnoreFiles(bang, silent, ...)
   let l:win_pos = winsaveview()
   let l:orig_winnr = winnr()
 
@@ -172,7 +173,7 @@ function! vimignore#IgnoreFiles(bang, ...)
   call vimignore#ReloadGitIndex()
 
   " If we detected any duplicates, let's provide a warning
-  if l:num_duplicates > 0
+  if l:num_duplicates > 0 && empty(a:silent)
     echohl WarningMsg
     echon 'Warning: '
     if l:num_duplicates == a:0 && l:num_duplicates == 1
