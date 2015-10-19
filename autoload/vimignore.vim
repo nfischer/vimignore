@@ -1,3 +1,7 @@
+""
+" @private
+" Returns the full path to the git base directory
+" @throws vimignore if this is not a git repository
 function! s:FindGitDir()
   if exists('b:git_dir')
     return b:git_dir
@@ -13,7 +17,9 @@ function! s:FindGitDir()
 endfunction
 
 ""
+" @private
 " Figure out the gitignore file and set the global variable
+" @throws vimignore if this is not a git repository
 function! s:SetGitIgnore()
   " First, figure out if this is a git repo
 
@@ -64,12 +70,17 @@ function! s:SetGitIgnore()
   return 0
 endfunction
 
+""
+" @private
+" Reloads current buffer if this is a git index
 function! s:RefreshGitFiles()
   if &filetype == 'gitcommit'
     silent! edit
   endif
 endfunction
 
+""
+" Reloads all git-status buffers to reflect new changes to the git index
 function! vimignore#ReloadGitIndex()
   let l:orig_buf = bufnr('%')
   bufdo call s:RefreshGitFiles()
@@ -100,6 +111,7 @@ endfunction
 
 ""
 " Open the gitignore file for edit
+" Returns 0 on success, nonzero on failure
 function! vimignore#EditGitIgnore(bang)
   " If we've already found the gitignore file, use it!
   if !exists('b:gitignore') || !filereadable(b:gitignore)
