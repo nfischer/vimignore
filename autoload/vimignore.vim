@@ -97,7 +97,7 @@ endfunction
 "   * If I don't have a file open currently, open this with |:edit|
 "   * If I'm already editing something useful, open this in a split
 function! s:OpenIgnoreFile(fname)
-  if empty(expand('%'))
+  if line('$') == 1 && empty(getline(1)) && empty(expand('%'))
     exe 'edit ' . a:fname
   else
     if exists('g:gsplit_pref') && g:gsplit_pref == 1
@@ -144,6 +144,9 @@ function! vimignore#IgnoreFiles(bang, silent, ...)
 
   silent call vimignore#EditGitIgnore('')
   let l:old_cursor = getpos('.')
+  if line('$') == 1 && empty(getline(1))
+    let l:initially_empty = 1
+  endif
   normal! G
   let l:num_duplicates = 0
   if empty(a:bang)
@@ -159,6 +162,11 @@ function! vimignore#IgnoreFiles(bang, silent, ...)
     for l:fname in a:000
       put=l:fname
     endfor
+  endif
+
+  if exists('l:initially_empty')
+    " Delete the extra empty line at top
+    normal! ggdd
   endif
 
   call setpos('.', l:old_cursor)
