@@ -99,13 +99,10 @@ endfunction
 function! s:OpenIgnoreFile(fname)
   if line('$') == 1 && empty(getline(1)) && empty(expand('%'))
     exe 'edit ' . a:fname
+  elseif exists('g:gsplit_pref') && g:gsplit_pref == 1
+    exe 'vsplit ' . a:fname
   else
-    if exists('g:gsplit_pref') && g:gsplit_pref == 1
-      let l:make_split = 'vsp'
-    else
-      let l:make_split = 'split'
-    endif
-    exe l:make_split . ' ' . a:fname
+    exe 'split ' . a:fname
   endif
 endfunction
 

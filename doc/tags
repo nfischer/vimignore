@@ -3,8 +3,10 @@
 :GIgnoreCurrentFile	vimignore.txt	/*:GIgnoreCurrentFile*
 :GIgnoreDefaults	vimignore.txt	/*:GIgnoreDefaults*
 Vimignore	vimignore.txt	/*Vimignore*
+g:gsplit_pref	vimignore.txt	/*g:gsplit_pref*
 vimignore	vimignore.txt	/*vimignore*
 vimignore-commands	vimignore.txt	/*vimignore-commands*
+vimignore-config	vimignore.txt	/*vimignore-config*
 vimignore-contents	vimignore.txt	/*vimignore-contents*
 vimignore-fugitive-integration	vimignore.txt	/*vimignore-fugitive-integration*
 vimignore-intro	vimignore.txt	/*vimignore-intro*

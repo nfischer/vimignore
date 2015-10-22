@@ -90,3 +90,10 @@ augroup vimignore
   autocmd!
   autocmd FileType gitcommit call s:SetIndexMappings()
 augroup END
+
+""
+" @setting g:gsplit_pref
+" You can override the default split orientation by using this setting. By
+" default, the gitignore file opens in a regular split, but you can redefine
+" this to prefer to open in a vertical split with >
+"   let g:gsplit_pref=1
