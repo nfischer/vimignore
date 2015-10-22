@@ -76,15 +76,17 @@ command! -nargs=0 -bang GIgnoreDefaults call vimignore#AddDefaults('<bang>')
 
 ""
 " @private
-" Set mappings for when we're in a gitcommit file
+" Set mappings for when we're in a git index file
 " This is for fugitive integration with :Gstatus
-function! s:SetCommitMappings()
-  nnoremap <buffer> <silent> I :call <SID>GIgnoreFileOnLine()<CR>
+function! s:SetIndexMappings()
+  if expand('%:t') == 'index'
+    nnoremap <buffer> <silent> I :call <SID>GIgnoreFileOnLine()<CR>
+  endif
 endfunction
 
 ""
 " Set filetype mappings
 augroup vimignore
   autocmd!
-  autocmd FileType gitcommit call s:SetCommitMappings()
+  autocmd FileType gitcommit call s:SetIndexMappings()
 augroup END
