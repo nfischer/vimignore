@@ -66,6 +66,15 @@ command! -nargs=+ -complete=file -bang GAddToIgnore call
     \ vimignore#IgnoreFiles('<bang>', '', <f-args>)
 
 ""
+" Add sensible defaults to the .gitignore list. This adds .DS_Store, Vim swap
+" files, and Vim backup files to the list to prevent these from winding up under
+" version control.
+"
+" When the '!' is supplied, this will add them to the ignore list without
+" checking for duplicates.
+command! -nargs=0 -bang GIgnoreDefaults call vimignore#AddDefaults('<bang>')
+
+""
 " @private
 " Set mappings for when we're in a gitcommit file
 " This is for fugitive integration with :Gstatus

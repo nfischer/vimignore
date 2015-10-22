@@ -1,6 +1,5 @@
 # Vim files
-*.swp
-*.swo
+[._]*.s[a-w][a-z]
 *~
 
 # Mac files

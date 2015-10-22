@@ -190,3 +190,15 @@ function! vimignore#IgnoreFiles(bang, silent, ...)
     echohl NONE
   endif
 endfunction
+
+""
+" Add sensible defaults to the ignore list.
+function! vimignore#AddDefaults(...)
+  if a:0 > 0 && a:1 == '!'
+    let l:bang = a:1
+  else
+    let l:bang = ''
+  endif
+  let l:fnames = ['.DS_Store', '[._]*.s[a-w][a-z]', '*~']
+  call call('vimignore#IgnoreFiles', [l:bang, 'silent'] + l:fnames)
+endfunction

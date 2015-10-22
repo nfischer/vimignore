@@ -1,6 +1,7 @@
 :GAddToIgnore	vimignore.txt	/*:GAddToIgnore*
 :GEditIgnore	vimignore.txt	/*:GEditIgnore*
 :GIgnoreCurrentFile	vimignore.txt	/*:GIgnoreCurrentFile*
+:GIgnoreDefaults	vimignore.txt	/*:GIgnoreDefaults*
 Vimignore	vimignore.txt	/*Vimignore*
 vimignore	vimignore.txt	/*vimignore*
 vimignore-commands	vimignore.txt	/*vimignore-commands*
