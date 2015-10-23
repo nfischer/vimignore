@@ -27,9 +27,11 @@
 " This is my function. There are many like it, but this one is mine
 function! s:GIgnoreFileOnLine()
   let l:line_text = getline('.')
-  let l:match = matchlist(l:line_text, '^#\t\S\+:\s\+\(\S\+\)$')
+  let l:file_line_regex = '^#\t\(new file:\s\+\|modified:\s\+\|\)\(\S.*\)$'
+  let l:match = matchlist(l:line_text, l:file_line_regex)
+  " let l:match = matchlist(l:line_text, '^#\t[\S\l]\+:\s\+\(\S\+\)$')
   try
-    let l:fname = l:match[1]
+    let l:fname = l:match[2]
     call vimignore#IgnoreFiles('', '', l:fname)
   catch /E684/
     echohl ErrorMsg | echo 'Could not detect filename' | echohl NONE
