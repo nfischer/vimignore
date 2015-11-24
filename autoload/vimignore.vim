@@ -19,12 +19,20 @@ endfunction
 ""
 " @private
 " Figure out the gitignore file and set the global variable
-" @throws vimignore if this is not a git repository
+" @throws vimignore if this is not a git repository or if we can't find the
+" current working directory
 function! s:SetGitIgnore()
   " First, figure out if this is a git repo
 
   " Set current dir (call function to silence output
-  let l:cur_dir = system('pwd')
+  let l:cur_dir = getcwd()
+  if empty(l:cur_dir)
+    echohl ErrorMsg
+    echo 'Unable to determine current directory'
+    echohl NONE
+    throw 'vimignore'
+  endif
+
   let l:old_autochdir = &l:autochdir
 
   " Change into the directory of the current file
