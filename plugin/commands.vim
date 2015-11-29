@@ -55,7 +55,7 @@ command! -nargs=0 -bang GEditIgnore call vimignore#EditGitIgnore('<bang>')
 " By default, this will check the gitignore list to avoid adding duplicate
 " entries. If the '!' is provided, this will not check for duplicates.
 command! -nargs=0 -bang GIgnoreCurrentFile
-    \ call vimignore#IgnoreFiles('<bang>', '' expand('%'))
+    \ call vimignore#IgnoreFiles('<bang>', '', expand('%'))
 
 ""
 " @usage {fname1} [fnames...]
